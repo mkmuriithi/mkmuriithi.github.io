@@ -1,9 +1,6 @@
-// create a theme context that will accept 'children' as a prop
-// and a state that will be used to toggle between themes
-
-import React, { createContext, useState, useMemo, useContext } from 'react';
 
 
+import React, { createContext, useState, useMemo, useContext, useEffect } from 'react';
 
 // interfaces for the context and the provider
 interface IThemeContext {
@@ -30,21 +27,31 @@ const useThemeContext = () => {
 }
 
 const ThemeProvider = ({ children }: IThemeProvider) => {
-    const [darkMode, setDarkMode] = useState(false);
+
+    // get default theme from the system
+
+    const systemTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    const defaultDarkMode = savedTheme ? savedTheme === 'dark' : systemTheme;
+
+
+    const [darkMode, setDarkMode] = useState<boolean>(defaultDarkMode);
+
     const toggleTheme = (darkThemeContext?: boolean) => {
-        setDarkMode(darkThemeContext ?? !darkMode);
+        const isDarkMode = darkThemeContext != undefined ? darkThemeContext : !darkMode;
+        setDarkMode(isDarkMode);
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     };
+
     // memoize the context value to avoid unnecessary re-renders
     const value = useMemo(() => ({ darkMode, toggleTheme }), [darkMode]);
 
-    // change what we give the body tag depending on theme
-    const applyTheme = (darkMode: boolean) => { // figure out how to cache this value to visitors of site
-        if (darkMode) {
-            document.body.classList.add('dark');
-        } else {
-            document.body.classList.remove('dark');
-        }
-    }
+
+    useEffect(() => {
+        document.body.classList.toggle('dark', darkMode);
+    }, [darkMode]);
+
+
 
     return (
         <ThemeContext.Provider value={value}>

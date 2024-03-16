@@ -32,11 +32,15 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  @apply bg-slate-900 leading-relaxed text-slate-400 ;
+  @apply bg-white dark:bg-slate-900 leading-relaxed text-gray-900;
 
   .dark & {
-    @apply bg-white text-gray-900;
+    @apply bg-slate-900 leading-relaxed text-gray-900;
   }
+}
+body.dark {
+  @apply bg-slate-900 leading-relaxed text-gray-900;
+
 }
 
 h1 {
