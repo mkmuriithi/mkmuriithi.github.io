@@ -30,6 +30,7 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  padding-top: 200px;
   min-width: 320px;
   min-height: 100vh;
   @apply bg-white dark:bg-slate-900 leading-relaxed text-gray-900;
